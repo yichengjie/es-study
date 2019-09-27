@@ -1,0 +1,5 @@
+spring:
+  data:
+    elasticsearch:
+      cluster-nodes: localhost:9300 # 配置IP及端口
+      cluster-name: elasticsearch
