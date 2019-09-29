@@ -6,6 +6,8 @@ import java.util.Map;
 import com.yicj.study.common.PageInfo;
 
 public interface IDocumentService {
+	//根绝id查询document
+	public Map<String,Object> queryDocumentById(String indexName,String id) ;
 	//新增document
 	public Integer insertDocument(String indexName, Map<String, Object> data) ;
 	//更新document

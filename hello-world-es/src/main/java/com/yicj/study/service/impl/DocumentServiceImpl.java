@@ -2,6 +2,7 @@ package com.yicj.study.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -72,14 +73,26 @@ public class DocumentServiceImpl implements IDocumentService {
 		}
 		return 1;
 	}
+	
+	@Override
+	public Map<String, Object> queryDocumentById(String indexName, String id) {
+		Map<String, Object> query = new HashMap<String, Object>() ;
+		query.put("_id", id) ;
+		List<Map<String, Object>> documents = this.queryDocument(indexName, query);
+		if(documents.size() > 0) {
+			return documents.get(0) ;
+		}
+		return new HashMap<String, Object>() ;
+	}
+	
 
 	// 查询
 	@Override
 	public List<Map<String, Object>> queryDocument(String indexName, Map<String, Object> query) {
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		;
 		SearchRequest searchRequest = new SearchRequest(indexName);
 		searchRequest.types(indexName);
+		
 		queryBuilder(null, null, query, indexName, searchRequest);
 		try {
 			SearchResponse resp = client.search(searchRequest, RequestOptions.DEFAULT);
@@ -156,6 +169,7 @@ public class DocumentServiceImpl implements IDocumentService {
 		}
 		return dataList.size();
 	}
+
 	
 	
 
