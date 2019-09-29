@@ -9,6 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import com.google.gson.Gson;
+
 
 @Configuration
 @ComponentScan(basePackageClasses=ESClientSpringFactory.class)
@@ -24,6 +26,14 @@ public class ESConfig {
 
     @Value("${elasticSearch.client.connectPerRoute}")
     private Integer connectPerRoute;
+    
+    
+    @Bean
+    public Gson gson() {
+    	Gson gson = new Gson() ;
+    	return gson ;
+    }
+    
 
     @Bean
     public HttpHost httpHost(){

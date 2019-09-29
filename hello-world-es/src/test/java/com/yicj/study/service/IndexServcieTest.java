@@ -12,27 +12,24 @@ import com.yicj.study.service.IIndexService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ESApplication.class)
 public class IndexServcieTest {
-
+	private String indexName = "helloworld" ;
     @Autowired
     private IIndexService helloService ;
 
     @Test
     public void testCreateIndex() {
-    	String indexName = "helloworld" ;
         boolean flag = helloService.createIndex(indexName);
         System.out.println("create index is success : " + flag);
     }
     
     @Test
     public void testIsIndexExists() {
-    	String indexName = "helloworld" ;
         boolean flag = helloService.isIndexExists(indexName) ;
         System.out.println("index is exists : " + flag);
     }
     
     @Test
     public void testDeleteIndex() {
-    	String indexName = "helloworld" ;
         boolean flag = helloService.deleteIndex(indexName) ;
         System.out.println("delete index success : " + flag);
     }
