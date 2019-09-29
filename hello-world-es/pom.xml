@@ -14,6 +14,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
@@ -30,6 +31,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>

@@ -37,7 +37,8 @@ public class IndexServiceImpl implements IIndexService {
 			XContentBuilder builder = JsonXContent.contentBuilder();
 			builder.startObject()
 			.startObject("mappings")
-			.startObject("index_name")
+			.startObject(indexName)
+			//.startObject("index_name")
 			.field("properties", properties)
 			.endObject()
 			.endObject()

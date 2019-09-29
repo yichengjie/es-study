@@ -51,7 +51,6 @@ public class DocumentServiceImpl implements IDocumentService {
 	// 更新
 	@Override
 	public Integer updateDocument(String indexName, Map<String, Object> data, String id) {
-
 		UpdateRequest updateRequest = new UpdateRequest(indexName, indexName, id);
 		updateRequest.doc(data);
 		try {
@@ -92,7 +91,6 @@ public class DocumentServiceImpl implements IDocumentService {
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		SearchRequest searchRequest = new SearchRequest(indexName);
 		searchRequest.types(indexName);
-		
 		queryBuilder(null, null, query, indexName, searchRequest);
 		try {
 			SearchResponse resp = client.search(searchRequest, RequestOptions.DEFAULT);
