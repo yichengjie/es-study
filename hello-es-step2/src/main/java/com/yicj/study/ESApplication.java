@@ -3,7 +3,7 @@ package com.yicj.study;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//https://blog.csdn.net/qq1107533660/article/details/83347358
+//https://www.jianshu.com/p/de838a665eec
 @SpringBootApplication
 public class ESApplication {
 
