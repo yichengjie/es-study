@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.yicj.study.ESApplication;
+import com.yicj.study.common.PageInfo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ESApplication.class)
@@ -39,6 +40,15 @@ public class DocumentServiceTest {
 		data.put("current", "河南省南阳市") ;
 		documentService.insertDocument(indexName, data);
 	}
+	@Test
+	public void testInsertDocument3() {
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("name", "李9");
+		data.put("addr", "河南省洛阳市");
+		data.put("email", "93548471@qq.com");
+		data.put("current", "河南省南阳市") ;
+		documentService.insertDocument(indexName, data);
+	}
 
 	@Test
 	public void testQueryDocument() {
@@ -46,6 +56,14 @@ public class DocumentServiceTest {
 		query.put("name", "成杰");
 		List<Map<String, Object>> documents = documentService.queryDocument(indexName, query);
 		System.out.println(documents);
+	}
+	
+	@Test
+	public void testQueryDocumentPage() {
+		Map<String, Object> query = new HashMap<String, Object>();
+		query.put("addr", "河南");
+		PageInfo<Map<String, Object>> page = documentService.queryDocumentPage(1, 2, indexName, query);
+		System.out.println(page);
 	}
 	
 	

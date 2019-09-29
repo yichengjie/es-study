@@ -130,13 +130,13 @@ public class DocumentServiceImpl implements IDocumentService {
 	}
 
 	// 分页查询
-	public PageInfo<Map<String, Object>> documentPage(Integer pageIndex, 
-			Integer pageSize, String indexName,Map<String, Object> data) {
+	public PageInfo<Map<String, Object>> queryDocumentPage(Integer pageIndex, 
+			Integer pageSize, String indexName,Map<String, Object> query) {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>() ;
 		SearchRequest searchRequest = new SearchRequest(indexName);
 		searchRequest.types(indexName);
-		queryBuilder(pageIndex, pageSize, data, indexName, searchRequest);
+		queryBuilder(pageIndex, pageSize, query, indexName, searchRequest);
 		try {
 			SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
 			for (SearchHit hit : response.getHits().getHits()) {

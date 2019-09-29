@@ -17,8 +17,8 @@ public interface IDocumentService {
 	//查询document
 	public List<Map<String, Object>> queryDocument(String indexName, Map<String, Object> query) ;
 	//分页查询
-	public PageInfo<Map<String, Object>> documentPage(Integer pageIndex, 
-			Integer pageSize, String indexName,Map<String, Object> data)  ;
+	public PageInfo<Map<String, Object>> queryDocumentPage(Integer pageIndex, 
+			Integer pageSize, String indexName,Map<String, Object> query)  ;
 	//批量插入
 	public Integer batchInsertDocument(String indexName, List<Map<String, Object>> dataList) ;
 }
