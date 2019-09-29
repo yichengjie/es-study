@@ -1,5 +1,6 @@
-spring:
-  data:
-    elasticsearch:
-      cluster-nodes: localhost:9300 # 配置IP及端口
-      cluster-name: my-application
+elasticSearch: 
+  host: localhost
+  port: 9200
+  client: 
+    connectNum: 10
+    connectPerRoute: 50
