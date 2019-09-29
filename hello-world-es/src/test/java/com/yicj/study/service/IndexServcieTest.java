@@ -7,14 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.yicj.study.ESApplication;
-import com.yicj.study.service.IHelloService;
+import com.yicj.study.service.IIndexService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ESApplication.class)
-public class HelloServcieTest {
+public class IndexServcieTest {
 
     @Autowired
-    private IHelloService helloService ;
+    private IIndexService helloService ;
 
     @Test
     public void testCreateIndex() {

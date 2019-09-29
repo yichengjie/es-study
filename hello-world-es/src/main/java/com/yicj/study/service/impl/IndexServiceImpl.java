@@ -14,13 +14,13 @@ import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yicj.study.service.IHelloService;
+import com.yicj.study.service.IIndexService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class HelloServiceImpl implements IHelloService {
+public class IndexServiceImpl implements IIndexService {
 	@Autowired
     private RestHighLevelClient client;
 	

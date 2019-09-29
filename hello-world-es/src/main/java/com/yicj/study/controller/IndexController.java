@@ -1,14 +1,14 @@
 package com.yicj.study.controller;
 
-import com.yicj.study.service.IHelloService;
+import com.yicj.study.service.IIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/index")
-public class HelloController {
+public class IndexController {
 
 	@Autowired
-	private IHelloService helloService;
+	private IIndexService helloService;
 
 	@GetMapping("/createIndex")
 	public boolean createIndex() {

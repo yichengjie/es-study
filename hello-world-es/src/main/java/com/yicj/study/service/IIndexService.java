@@ -1,6 +1,6 @@
 package com.yicj.study.service;
 
-public interface IHelloService {
+public interface IIndexService {
 
 	//添加Index
 	public boolean createIndex(String indexName) ;
