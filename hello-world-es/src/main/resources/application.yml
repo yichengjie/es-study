@@ -1,6 +1,0 @@
-elasticSearch: 
-  host: localhost
-  port: 9200
-  client: 
-    connectNum: 10
-    connectPerRoute: 50

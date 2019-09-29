@@ -7,7 +7,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>hello-world-es</module>
+		<module>hello-es-step1</module>
+		<module>hello-es-step2</module>
 	</modules>
 
 	<properties>
