@@ -132,7 +132,7 @@ public class DocumentServiceImpl implements IDocumentService {
 	// 分页查询
 	public PageInfo<Map<String, Object>> documentPage(Integer pageIndex, 
 			Integer pageSize, String indexName,Map<String, Object> data) {
-		PageInfo<Map<String, Object>> pageInfo = new PageInfo<>();
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>() ;
 		SearchRequest searchRequest = new SearchRequest(indexName);
 		searchRequest.types(indexName);

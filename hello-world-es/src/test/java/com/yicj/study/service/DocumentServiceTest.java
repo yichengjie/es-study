@@ -29,6 +29,16 @@ public class DocumentServiceTest {
 		data.put("email", "626659321@qq.com");
 		documentService.insertDocument(indexName, data);
 	}
+	
+	@Test
+	public void testInsertDocument2() {
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("name", "刘七");
+		data.put("addr", "北京市丰台区");
+		data.put("email", "test@qq.com");
+		data.put("current", "河南省南阳市") ;
+		documentService.insertDocument(indexName, data);
+	}
 
 	@Test
 	public void testQueryDocument() {
