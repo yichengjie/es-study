@@ -33,7 +33,8 @@ public class IndexServiceImpl implements IIndexService {
 			propertie.put("type", "text");
 			propertie.put("index", true);
 			propertie.put("analyzer", "ik_max_word");
-			properties.put("field_name", propertie);
+			properties.put("tickNo", propertie);
+			
 			XContentBuilder builder = JsonXContent.contentBuilder();
 			builder.startObject()
 			.startObject("mappings")
