@@ -14,23 +14,23 @@ import com.yicj.study.service.IIndexService;
 public class IndexServcieTest {
 	private String indexName = "helloworld" ;
     @Autowired
-    private IIndexService helloService ;
+    private IIndexService indexService ;
 
     @Test
     public void testCreateIndex() {
-        boolean flag = helloService.createIndex(indexName);
+        boolean flag = indexService.createIndex(indexName);
         System.out.println("create index is success : " + flag);
     }
     
     @Test
     public void testIsIndexExists() {
-        boolean flag = helloService.isIndexExists(indexName) ;
+        boolean flag = indexService.isIndexExists(indexName) ;
         System.out.println("index is exists : " + flag);
     }
     
     @Test
     public void testDeleteIndex() {
-        boolean flag = helloService.deleteIndex(indexName) ;
+        boolean flag = indexService.deleteIndex(indexName) ;
         System.out.println("delete index success : " + flag);
     }
 

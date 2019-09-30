@@ -1,46 +1,35 @@
 package com.yicj.study.service.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.gson.Gson;
-import com.yicj.study.common.PageInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yicj.study.common.EsConsts;
+import com.yicj.study.common.RestClientHelper;
+import com.yicj.study.entity.Book;
 import com.yicj.study.service.IDocumentService;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class DocumentServiceImpl implements IDocumentService {
-
-	@Autowired
-	private RestHighLevelClient client;
-
-	@Autowired
-	private Gson gson;
-
+	private RestHighLevelClient client = RestClientHelper.getClient();
 	// 插入
 	@Override
-	public Integer insertDocument(String indexName, Map<String, Object> data) {
-		IndexRequest indexRequest = new IndexRequest(indexName, indexName);
-		indexRequest.source(gson.toJson(data), XContentType.JSON);
+	public Integer insertDocument(Book book) {
 		try {
+			IndexRequest indexRequest = new IndexRequest(EsConsts.INDEX_NAME, EsConsts.TYPE, book.getNumber());
+			ObjectMapper mapper = new ObjectMapper();
+			byte[] json = mapper.writeValueAsBytes(book);
+			indexRequest.source(json, XContentType.JSON);
 			client.index(indexRequest, RequestOptions.DEFAULT);
 		} catch (IOException e) {
 			log.error("插入document出错:", e);
@@ -48,13 +37,18 @@ public class DocumentServiceImpl implements IDocumentService {
 		return 1;
 	}
 
+
 	// 更新
 	@Override
-	public Integer updateDocument(String indexName, Map<String, Object> data, String id) {
-		UpdateRequest updateRequest = new UpdateRequest(indexName, indexName, id);
-		updateRequest.doc(data);
+	public Integer updateDocument(Book book) {
 		try {
-			client.update(updateRequest, RequestOptions.DEFAULT);
+			UpdateRequest updateRequest = new UpdateRequest(EsConsts.INDEX_NAME, EsConsts.TYPE, book.getNumber());
+			IndexRequest indexRequest = new IndexRequest(EsConsts.INDEX_NAME, EsConsts.TYPE, book.getNumber());
+			ObjectMapper mapper = new ObjectMapper();
+			byte[] json = mapper.writeValueAsBytes(book);
+			indexRequest.source(json, XContentType.JSON);
+			updateRequest.doc(indexRequest);
+			client.update(updateRequest,RequestOptions.DEFAULT).getGetResult();
 		} catch (IOException e) {
 			log.error("更新document出错:", e);
 		}
@@ -63,112 +57,30 @@ public class DocumentServiceImpl implements IDocumentService {
 
 	// 删除
 	@Override
-	public Integer deleteDocument(String indexName, String id) {
-		DeleteRequest deleteRequest = new DeleteRequest(indexName, indexName, id);
+	public String deleteDocument(String id) {
 		try {
-			client.delete(deleteRequest, RequestOptions.DEFAULT);
+			DeleteRequest deleteRequest = new DeleteRequest(EsConsts.INDEX_NAME, EsConsts.TYPE, id);
+			DeleteResponse delete = client.delete(deleteRequest, RequestOptions.DEFAULT);
+	        return delete.getResult().toString();
 		} catch (IOException e) {
 			log.error("删除document出错:", e);
+			return null ;
 		}
-		return 1;
 	}
-	
+
 	@Override
-	public Map<String, Object> queryDocumentById(String indexName, String id) {
-		Map<String, Object> query = new HashMap<String, Object>() ;
-		query.put("_id", id) ;
-		List<Map<String, Object>> documents = this.queryDocument(indexName, query);
-		if(documents.size() > 0) {
-			return documents.get(0) ;
-		}
-		return new HashMap<String, Object>() ;
-	}
-	
-
-	// 查询
-	@Override
-	public List<Map<String, Object>> queryDocument(String indexName, Map<String, Object> query) {
-		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		SearchRequest searchRequest = new SearchRequest(indexName);
-		searchRequest.types(indexName);
-		queryBuilder(null, null, query, indexName, searchRequest);
+	public Book queryDocumentById(String id) {
 		try {
-			SearchResponse resp = client.search(searchRequest, RequestOptions.DEFAULT);
-			for (SearchHit hit : resp.getHits().getHits()) {
-				Map<String, Object> map = hit.getSourceAsMap();
-				map.put("id", hit.getId());
-				result.add(map);
-			}
+			GetRequest getRequest = new GetRequest(EsConsts.INDEX_NAME, EsConsts.TYPE, id);
+			GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
+			byte[] sourceAsBytes = getResponse.getSourceAsBytes();
+			ObjectMapper mapper = new ObjectMapper();
+			Book book = mapper.readValue(sourceAsBytes, Book.class);
+			return book;
 		} catch (IOException e) {
-			log.error("查询document出错:", e);
-		}
-		return result;
-	}
-
-	private void queryBuilder(Integer pageIndex, Integer pageSize, Map<String, Object> query, String indexName,
-			SearchRequest searchRequest) {
-		if (query != null && !query.keySet().isEmpty()) {
-			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-			if (pageIndex != null && pageSize != null) {
-				searchSourceBuilder.size(pageSize);
-				if (pageIndex <= 0) {
-					pageIndex = 0;
-				}
-				searchSourceBuilder.from((pageIndex - 1) * pageSize);
-			}
-			BoolQueryBuilder boolBuilder = QueryBuilders.boolQuery();
-			query.keySet().forEach(key -> {
-				// ESDataTypeEnum type = ESDataTypeEnum.TEXT;
-				boolBuilder.must(QueryBuilders.matchQuery(key, query.get(key)));
-
-			});
-			searchSourceBuilder.query(boolBuilder);
-			searchRequest.source(searchSourceBuilder);
+			log.error("根据id查询document报错");
+			return null ;
 		}
 	}
-
-	// 分页查询
-	public PageInfo<Map<String, Object>> queryDocumentPage(Integer pageIndex, 
-			Integer pageSize, String indexName,Map<String, Object> query) {
-		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>();
-		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>() ;
-		SearchRequest searchRequest = new SearchRequest(indexName);
-		searchRequest.types(indexName);
-		queryBuilder(pageIndex, pageSize, query, indexName, searchRequest);
-		try {
-			SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
-			for (SearchHit hit : response.getHits().getHits()) {
-				Map<String, Object> map = hit.getSourceAsMap();
-				map.put("id", hit.getId());
-				result.add(map);
-			}
-			pageInfo.setPageSize(pageSize);
-			pageInfo.setPageSize(pageIndex);
-			pageInfo.setTotal(response.getHits().getTotalHits());
-			pageInfo.setList(result);
-		} catch (IOException e) {
-			log.error("分页查询出错:",e);
-		}
-		return pageInfo;
-	}
-	//批量插入
-	@Override
-	public Integer batchInsertDocument(String indexName, List<Map<String, Object>> dataList) {
-		BulkRequest bulkRequest = new BulkRequest()  ;
-		dataList.forEach(data->{
-			IndexRequest indexRequest = new IndexRequest(indexName,indexName) ;
-			indexRequest.source(gson.toJson(data),XContentType.JSON) ;
-			bulkRequest.add(indexRequest) ;
-		});
-		try {
-			client.bulk(bulkRequest, RequestOptions.DEFAULT) ;
-		} catch (IOException e) {
-			log.error("批量插入出错:",e);
-		}
-		return dataList.size();
-	}
-
-	
-	
 
 }
