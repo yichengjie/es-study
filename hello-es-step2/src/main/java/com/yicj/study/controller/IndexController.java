@@ -12,8 +12,7 @@ public class IndexController {
 
 	@GetMapping("/createIndex")
 	public boolean createIndex() {
-		String indexName = "helloworld";
-		return helloService.createIndex(indexName);
+		return helloService.createIndex();
 	}
 
 }

@@ -21,7 +21,7 @@ public class IndexServiceImpl implements IIndexService {
 	private RestHighLevelClient client = RestClientHelper.getClient();
 
 	@Override
-	public boolean createIndex(String indexName) {
+	public boolean createIndex() {
 		try {
 			CreateIndexRequest request = new CreateIndexRequest(EsConsts.INDEX_NAME);
 			buildSetting(request);
@@ -72,10 +72,10 @@ public class IndexServiceImpl implements IIndexService {
     }
 
 	@Override
-	public boolean isIndexExists(String indexName) {
+	public boolean isIndexExists() {
 		try {
 			GetIndexRequest request = new GetIndexRequest();
-			request.indices(indexName);
+			request.indices(EsConsts.INDEX_NAME);
 			return client.indices().exists(request, RequestOptions.DEFAULT);
 		} catch (IOException e) {
 			log.error("判断Index是否存在出错:", e);
@@ -84,7 +84,7 @@ public class IndexServiceImpl implements IIndexService {
 	}
 
 	@Override
-	public boolean deleteIndex(String indexName) {
+	public boolean deleteIndex() {
 		try {
 			GetIndexRequest getIndexRequest = new GetIndexRequest();
 	        getIndexRequest.indices(EsConsts.INDEX_NAME);
