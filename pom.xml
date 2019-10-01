@@ -9,6 +9,7 @@
 	<modules>
 		<module>hello-es-step1</module>
 		<module>hello-es-step2</module>
+		<module>hello-es-step3</module>
 	</modules>
 
 	<properties>
